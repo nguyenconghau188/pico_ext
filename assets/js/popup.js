@@ -1,7 +1,8 @@
 let popup = {
   localData: {},
   timeout: 3000,
-
+  classUsername: "_2tbHP6ZydRpjI44J3syuqC",
+  classTitle: "_eYtD2XCVieq6emjKBH3m",
   init: function () {
     if (jQuery.isEmptyObject(popup.localData)) {
       popup.loadLocalData();
@@ -15,7 +16,10 @@ let popup = {
     $(document)
       .on("click", ".btn-copy", popup.handleButtonCopy)
       .on("click", "#btn-update", popup.handleUpdateRedditInfo)
-      .on("click", "#btn-get-username", popup.handleGetTargetUsername);
+      .on("click", "#btn-get-username", popup.handleGetTargetUsername)
+      .on("click", "#btn-get-reddit-username-0", popup.handleGetRedditUsername0)
+      .on("click", "#btn-get-reddit-username-1", popup.handleGetRedditUsername1)
+      .on("click", "#btn-get-reddit-title", popup.handleGetRedditTitle);
   },
 
   loadLocalData: function () {
@@ -43,7 +47,12 @@ let popup = {
     let inputTxt = $(this).next().val();
     let type = $(this).next().attr("name");
     if (inputTxt !== "") {
-      let content = "[" + popup.getLocalTime() + "][" + type + "] " + inputTxt;
+      let content;
+      if (type == "message") {
+        content = inputTxt;
+      } else {
+        content = "[" + popup.getLocalTime() + "] " + inputTxt;
+      }
       let message = {
         title: "Copy Success",
         content: content,
@@ -144,6 +153,78 @@ let popup = {
 
   handleGetTargetUsername: function () {
     window.localStorage.removeItem("data_reddit");
+  },
+
+  handleGetRedditUsername0: function () {
+    popup.getReddit("username", 0);
+  },
+
+  handleGetRedditUsername1: function () {
+    popup.getReddit("username", 1);
+  },
+
+  handleGetRedditTitle: function () {
+    popup.getReddit("title", null);
+  },
+
+  getReddit: function (target, type) {
+    chrome.tabs.query({ active: true }, function (tabs) {
+      var tab = tabs[0];
+      if (target == "title") {
+        chrome.tabs.executeScript(
+          tab.id,
+          {
+            code:
+              'document.querySelector("h1.' +
+              popup.classTitle +
+              '").textContent',
+          },
+          function (result) {
+            let tab_title = result[0];
+            let message = {
+              title: "Copy Success " + target,
+              content: tab_title,
+            };
+            popup.showMessage(message);
+            popup.copyToClipboard(tab_title);
+            return false;
+          }
+        );
+      } else if (target == "username")
+        chrome.tabs.executeScript(
+          tab.id,
+          {
+            code:
+              'document.querySelector("a.' +
+              popup.classUsername +
+              '").textContent',
+          },
+          function (result) {
+            if (result.length > 0) {
+              let username = "";
+              if (type == 0) {
+                username = result[0];
+              } else {
+                username = result[0].slice(2, result[0].length);
+              }
+              let message = {
+                title: "Copy Success " + target,
+                content: username,
+              };
+              popup.showMessage(message);
+              popup.copyToClipboard(username);
+              return false;
+            } else {
+              let error = {
+                title: "Copy fail",
+                content: "",
+              };
+              popup.showError(error);
+              return false;
+            }
+          }
+        );
+    });
   },
 };
 
