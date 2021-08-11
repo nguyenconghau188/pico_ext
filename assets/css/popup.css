@@ -1,0 +1,13 @@
+body {
+  font-size: 12px;
+  min-width: 360px;
+  min-height: 300px;
+  width: 360px;
+  height: auto;
+}
+input {
+  width: 260px;
+}
+.btn-copy {
+  width: 85px;
+}
