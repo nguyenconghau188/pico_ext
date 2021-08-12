@@ -20,25 +20,32 @@
             <form id="frm-reddit-info">
                 <div class="mb-1 input-group">
                     <button type="button" class="btn btn-sm btn-outline-primary btn-copy" id="btn-url">URL</button>
-                    <input type="text" class="form-control-sm" id="input-url" name="url" placeholder="Enter your reddit url"
+                    <input type="text" class="form-control-sm ml-1 text-input" id="input-url" name="url" placeholder="Enter your reddit url"
                         value="">
                 </div>
                 <div class="mb-1 input-group">
                     <button type="button" class="btn btn-sm btn-outline-primary btn-copy" id="btn-username">Username</button>
-                    <input type="text" class="form-control-sm" id="input-username" name="username" placeholder="Enter your reddit username"
+                    <input type="text" class="form-control-sm ml-1 text-input" id="input-username" name="username" placeholder="Enter your reddit username"
                         value="">
                 </div>
                 <div class="mb-1 input-group">
                     <button type="button" class="btn btn-sm btn-outline-primary btn-copy" id="btn-message">Message</button>
-                    <input type="text" class="form-control-sm" id="input-message" name="message" placeholder="Enter shadow ban message"
+                    <input type="text" class="form-control-sm ml-1 text-input" id="input-message" name="message" placeholder="Enter shadow ban message"
                         value="">
                 </div>
                 <div class="mb-1 mt-1 form-group">
                     <button type="button" class="btn btn-sm btn-warning btn-update w-100" id="btn-update">Update Reddit Info</button>
                 </div>
             </form>
-            <div class="mb-1 input-group">
-                <label>Copy reddit: </label>
+            <div class="mb-1 input-group align-items-center">
+                <label class="col-3">Generate: </label>
+                <button type="button" class="btn btn-sm btn-outline-primary" id="btn-gen-code">Gen code</button>
+            </div>
+            <div class="mb-1 input-group align-items-center">
+                <label class="col-3">Copy reddit: </label>                  
+                <div class="form-check" style="margin-left: 0; align-items: center;">
+                    <input class="form-check-input" type="checkbox" id="with-code" style="width: 16px;"><label for="with-code" style="margin-top: 3px;">code</span>
+                </div>
                 <button type="button" class="btn btn-sm btn-outline-primary ml-2" id="btn-get-reddit-username-0">With u/</button>
                 <button type="button" class="btn btn-sm btn-outline-primary ml-2" id="btn-get-reddit-username-1">Without u/</button>
                 <button type="button" class="btn btn-sm btn-outline-primary ml-2" id="btn-get-reddit-title">Title</button>
@@ -46,5 +53,4 @@
         </div>
     </div>
 </body>
-
 </html>

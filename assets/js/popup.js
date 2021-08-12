@@ -3,6 +3,7 @@ let popup = {
   timeout: 3000,
   classUsername: "_2tbHP6ZydRpjI44J3syuqC",
   classTitle: "_eYtD2XCVieq6emjKBH3m",
+  classVoteButton: "voteButton",
   init: function () {
     if (jQuery.isEmptyObject(popup.localData)) {
       popup.loadLocalData();
@@ -19,7 +20,8 @@ let popup = {
       .on("click", "#btn-get-username", popup.handleGetTargetUsername)
       .on("click", "#btn-get-reddit-username-0", popup.handleGetRedditUsername0)
       .on("click", "#btn-get-reddit-username-1", popup.handleGetRedditUsername1)
-      .on("click", "#btn-get-reddit-title", popup.handleGetRedditTitle);
+      .on("click", "#btn-get-reddit-title", popup.handleGetRedditTitle)
+      .on("click", "#btn-gen-code", popup.handleGenerateCode);
   },
 
   loadLocalData: function () {
@@ -170,6 +172,7 @@ let popup = {
   getReddit: function (target, type) {
     chrome.tabs.query({ active: true }, function (tabs) {
       var tab = tabs[0];
+      let withCode = $("#with-code").is(":checked");
       if (target == "title") {
         chrome.tabs.executeScript(
           tab.id,
@@ -181,16 +184,18 @@ let popup = {
           },
           function (result) {
             let tab_title = result[0];
+            if (withCode) {
+              tab_title = "[" + popup.getLocalTime() + "] " + tab_title;
+            }
             let message = {
               title: "Copy Success " + target,
               content: tab_title,
             };
-            popup.showMessage(message);
-            popup.copyToClipboard(tab_title);
+            popup.handleCopySuccess(message, tab_title);
             return false;
           }
         );
-      } else if (target == "username")
+      } else if (target == "username") {
         chrome.tabs.executeScript(
           tab.id,
           {
@@ -207,12 +212,14 @@ let popup = {
               } else {
                 username = result[0].slice(2, result[0].length);
               }
+              if (withCode) {
+                username = "[" + popup.getLocalTime() + "] " + username;
+              }
               let message = {
                 title: "Copy Success " + target,
                 content: username,
               };
-              popup.showMessage(message);
-              popup.copyToClipboard(username);
+              popup.handleCopySuccess(message, username);
               return false;
             } else {
               let error = {
@@ -224,7 +231,47 @@ let popup = {
             }
           }
         );
+      }
     });
+  },
+
+  upvoteReddit: function () {
+    chrome.tabs.query({ active: true }, function (tabs) {
+      var tab = tabs[0];
+      chrome.tabs.executeScript(
+        tab.id,
+        {
+          code: 'document.querySelector("._1E9mcoVn4MYnuBQSVDt1gC button").getAttribute("aria-pressed")',
+        },
+        function (result) {
+          if (result[0] == "false") {
+            chrome.tabs.executeScript(
+              tab.id,
+              {
+                code: 'document.querySelector("._1E9mcoVn4MYnuBQSVDt1gC button").click()',
+              },
+              null
+            );
+          }
+        }
+      );
+    });
+  },
+
+  handleCopySuccess: function (message, textCopy) {
+    popup.showMessage(message);
+    popup.copyToClipboard(textCopy);
+    popup.upvoteReddit();
+  },
+
+  handleGenerateCode: function () {
+    let content = "[" + popup.getLocalTime() + "]";
+    let message = {
+      title: "Copy Success",
+      content: content,
+    };
+    popup.showMessage(message);
+    popup.copyToClipboard(content);
   },
 };
 
