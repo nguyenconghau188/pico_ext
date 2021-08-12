@@ -6,6 +6,6 @@
     "default_icon": "assets/images/icon.png",
     "default_popup": "src/popup.html"
   },
-  "permissions": ["storage", "tabs", "activeTab"],
+  "permissions": ["storage", "tabs", "activeTab", "http://*/", "https://*/"],
   "manifest_version": 2
 }
