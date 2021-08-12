@@ -1,13 +1,16 @@
 body {
   font-size: 12px;
-  min-width: 360px;
+  min-width: 380px;
   min-height: 300px;
   width: 360px;
   height: auto;
 }
-input {
-  width: 260px;
+input.text-input {
+  width: 280px;
 }
 .btn-copy {
   width: 85px;
+}
+label.col-3 {
+  padding: 0 10px;
 }
