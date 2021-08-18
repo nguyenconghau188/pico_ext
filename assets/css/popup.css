@@ -5,6 +5,9 @@ body {
   width: 360px;
   height: auto;
 }
+.card {
+  padding-bottom: 10px;
+}
 input.text-input {
   width: 280px;
 }
@@ -13,4 +16,16 @@ input.text-input {
 }
 label.col-3 {
   padding: 0 10px;
+}
+.alert {
+  padding: .8rem 1.25rem;
+}
+.form-check {
+  position: relative;
+  display: block;
+  padding-left: 1.25rem;
+  padding-top: 8px;
+}
+.text-button {
+  margin-top: 8px;
 }
