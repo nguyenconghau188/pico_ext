@@ -50,20 +50,21 @@ let popup = {
     let type = $(this).next().attr("name");
     if (inputTxt !== "") {
       let content;
-      if (type == "message") {
-        content = inputTxt;
-      } else {
-        content = "[" + popup.getLocalTime() + "] " + inputTxt;
-      }
+      // if (type == "message") {
+      //   content = inputTxt;
+      // } else {
+      //   content = "[" + popup.getLocalTime() + "] " + inputTxt;
+      // }
+      content = "[" + popup.getLocalTime() + "] " + inputTxt;
       let message = {
-        title: "Copy Success",
+        title: "Copy text successful",
         content: content,
       };
       popup.showMessage(message);
       popup.copyToClipboard(content);
     } else {
       let error = {
-        title: "Please enter Reddit " + $(this).text(),
+        title: "Please enter " + $(this).text().toLowerCase(),
         content: "",
       };
       popup.showError(error);
@@ -77,17 +78,7 @@ let popup = {
                 <strong>` +
       error.title +
       `!</strong> <br> ` +
-      error.content +
-      `
-                <button
-                type="button"
-                class="close"
-                data-dismiss="alert"
-                aria-label="Close"
-                >
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>`;
+      error.content
     $(".alert-area").html(html);
   },
 
@@ -98,17 +89,7 @@ let popup = {
                 <strong>` +
       message.title +
       `!</strong> <br> ` +
-      message.content +
-      `
-                <button
-                type="button"
-                class="close"
-                data-dismiss="alert"
-                aria-label="Close"
-                >
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>`;
+      message.content
     $(".alert-area").html(html);
   },
 
@@ -123,7 +104,7 @@ let popup = {
     popup.localData = data;
     window.localStorage.setItem("data_reddit", JSON.stringify(data));
     let message = {
-      title: "Update success",
+      title: "Update info successful",
       content: "",
     };
     popup.showMessage(message);
@@ -188,7 +169,7 @@ let popup = {
               tab_title = "[" + popup.getLocalTime() + "] " + tab_title;
             }
             let message = {
-              title: "Copy Success " + target,
+              title: "Copy " + target + " successful and reddit post upvoted",
               content: tab_title,
             };
             popup.handleCopySuccess(message, tab_title);
@@ -216,7 +197,7 @@ let popup = {
                 username = "[" + popup.getLocalTime() + "] " + username;
               }
               let message = {
-                title: "Copy Success " + target,
+                title: "Copy " + target + " successful and reddit post upvoted",
                 content: username,
               };
               popup.handleCopySuccess(message, username);
@@ -267,7 +248,7 @@ let popup = {
   handleGenerateCode: function () {
     let content = "[" + popup.getLocalTime() + "]";
     let message = {
-      title: "Copy Success",
+      title: "Copy code successful",
       content: content,
     };
     popup.showMessage(message);
