@@ -7,7 +7,7 @@ Pico jobs for vozer is an extension tool that improves speed of Reddit task for 
 - Go to any Reddit post and copy info
 - ✨Magic ✨
 
-# Installation
+## Installation
 https://webkul.com/blog/how-to-install-the-unpacked-extension-in-chrome/
 
 ## Demo
