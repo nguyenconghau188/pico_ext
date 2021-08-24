@@ -1,11 +1,11 @@
 {
-  "name": "Pico_ext",
+  "name": "Pico jobs for Vozers",
   "description": "Extension for Pico jobs by Vozers v2",
-  "version": "2.0",
+  "version": "2.1",
   "browser_action": {
     "default_icon": "assets/images/icon.png",
     "default_popup": "src/popup.html"
   },
-  "permissions": ["storage", "tabs", "activeTab"],
+  "permissions": ["storage", "tabs", "activeTab", "http://*/", "https://*/"],
   "manifest_version": 2
 }

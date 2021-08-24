@@ -3,6 +3,7 @@ let popup = {
   timeout: 3000,
   classUsername: "_2tbHP6ZydRpjI44J3syuqC",
   classTitle: "_eYtD2XCVieq6emjKBH3m",
+  classVoteButton: "voteButton",
   init: function () {
     if (jQuery.isEmptyObject(popup.localData)) {
       popup.loadLocalData();
@@ -19,7 +20,8 @@ let popup = {
       .on("click", "#btn-get-username", popup.handleGetTargetUsername)
       .on("click", "#btn-get-reddit-username-0", popup.handleGetRedditUsername0)
       .on("click", "#btn-get-reddit-username-1", popup.handleGetRedditUsername1)
-      .on("click", "#btn-get-reddit-title", popup.handleGetRedditTitle);
+      .on("click", "#btn-get-reddit-title", popup.handleGetRedditTitle)
+      .on("click", "#btn-gen-code", popup.handleGenerateCode);
   },
 
   loadLocalData: function () {
@@ -48,20 +50,21 @@ let popup = {
     let type = $(this).next().attr("name");
     if (inputTxt !== "") {
       let content;
-      if (type == "message") {
-        content = inputTxt;
-      } else {
-        content = "[" + popup.getLocalTime() + "] " + inputTxt;
-      }
+      // if (type == "message") {
+      //   content = inputTxt;
+      // } else {
+      //   content = "[" + popup.getLocalTime() + "] " + inputTxt;
+      // }
+      content = "[" + popup.getLocalTime() + "] " + inputTxt;
       let message = {
-        title: "Copy Success",
+        title: "Copy text successful",
         content: content,
       };
       popup.showMessage(message);
       popup.copyToClipboard(content);
     } else {
       let error = {
-        title: "Please enter Reddit " + $(this).text(),
+        title: "Please enter " + $(this).text().toLowerCase(),
         content: "",
       };
       popup.showError(error);
@@ -75,17 +78,7 @@ let popup = {
                 <strong>` +
       error.title +
       `!</strong> <br> ` +
-      error.content +
-      `
-                <button
-                type="button"
-                class="close"
-                data-dismiss="alert"
-                aria-label="Close"
-                >
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>`;
+      error.content
     $(".alert-area").html(html);
   },
 
@@ -96,17 +89,7 @@ let popup = {
                 <strong>` +
       message.title +
       `!</strong> <br> ` +
-      message.content +
-      `
-                <button
-                type="button"
-                class="close"
-                data-dismiss="alert"
-                aria-label="Close"
-                >
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>`;
+      message.content
     $(".alert-area").html(html);
   },
 
@@ -121,7 +104,7 @@ let popup = {
     popup.localData = data;
     window.localStorage.setItem("data_reddit", JSON.stringify(data));
     let message = {
-      title: "Update success",
+      title: "Update info successful",
       content: "",
     };
     popup.showMessage(message);
@@ -170,6 +153,7 @@ let popup = {
   getReddit: function (target, type) {
     chrome.tabs.query({ active: true }, function (tabs) {
       var tab = tabs[0];
+      let withCode = $("#with-code").is(":checked");
       if (target == "title") {
         chrome.tabs.executeScript(
           tab.id,
@@ -181,16 +165,18 @@ let popup = {
           },
           function (result) {
             let tab_title = result[0];
+            if (withCode) {
+              tab_title = "[" + popup.getLocalTime() + "] " + tab_title;
+            }
             let message = {
-              title: "Copy Success " + target,
+              title: "Copy " + target + " successful and reddit post upvoted",
               content: tab_title,
             };
-            popup.showMessage(message);
-            popup.copyToClipboard(tab_title);
+            popup.handleCopySuccess(message, tab_title);
             return false;
           }
         );
-      } else if (target == "username")
+      } else if (target == "username") {
         chrome.tabs.executeScript(
           tab.id,
           {
@@ -207,12 +193,14 @@ let popup = {
               } else {
                 username = result[0].slice(2, result[0].length);
               }
+              if (withCode) {
+                username = "[" + popup.getLocalTime() + "] " + username;
+              }
               let message = {
-                title: "Copy Success " + target,
+                title: "Copy " + target + " successful and reddit post upvoted",
                 content: username,
               };
-              popup.showMessage(message);
-              popup.copyToClipboard(username);
+              popup.handleCopySuccess(message, username);
               return false;
             } else {
               let error = {
@@ -224,7 +212,47 @@ let popup = {
             }
           }
         );
+      }
     });
+  },
+
+  upvoteReddit: function () {
+    chrome.tabs.query({ active: true }, function (tabs) {
+      var tab = tabs[0];
+      chrome.tabs.executeScript(
+        tab.id,
+        {
+          code: 'document.querySelector("._1E9mcoVn4MYnuBQSVDt1gC button").getAttribute("aria-pressed")',
+        },
+        function (result) {
+          if (result[0] == "false") {
+            chrome.tabs.executeScript(
+              tab.id,
+              {
+                code: 'document.querySelector("._1E9mcoVn4MYnuBQSVDt1gC button").click()',
+              },
+              null
+            );
+          }
+        }
+      );
+    });
+  },
+
+  handleCopySuccess: function (message, textCopy) {
+    popup.showMessage(message);
+    popup.copyToClipboard(textCopy);
+    popup.upvoteReddit();
+  },
+
+  handleGenerateCode: function () {
+    let content = "[" + popup.getLocalTime() + "]";
+    let message = {
+      title: "Copy code successful",
+      content: content,
+    };
+    popup.showMessage(message);
+    popup.copyToClipboard(content);
   },
 };
 
