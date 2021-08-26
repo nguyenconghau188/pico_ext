@@ -21,7 +21,8 @@ let popup = {
       .on("click", "#btn-get-reddit-username-0", popup.handleGetRedditUsername0)
       .on("click", "#btn-get-reddit-username-1", popup.handleGetRedditUsername1)
       .on("click", "#btn-get-reddit-title", popup.handleGetRedditTitle)
-      .on("click", "#btn-gen-code", popup.handleGenerateCode);
+      .on("click", "#btn-gen-code", popup.handleGenerateCode)
+      .on("click", "#btn-screenshot", popup.handleScreenShot);
   },
 
   loadLocalData: function () {
@@ -48,14 +49,14 @@ let popup = {
   handleButtonCopy: function () {
     let inputTxt = $(this).next().val();
     let type = $(this).next().attr("name");
+    console.log(type);
     if (inputTxt !== "") {
       let content;
-      // if (type == "message") {
-      //   content = inputTxt;
-      // } else {
-      //   content = "[" + popup.getLocalTime() + "] " + inputTxt;
-      // }
-      content = "[" + popup.getLocalTime() + "] " + inputTxt;
+      if (type == "message") {
+        content = inputTxt;
+      } else {
+        content = "[" + popup.getLocalTime() + "] " + inputTxt;
+      }
       let message = {
         title: "Copy text successful",
         content: content,
@@ -78,7 +79,7 @@ let popup = {
                 <strong>` +
       error.title +
       `!</strong> <br> ` +
-      error.content
+      error.content;
     $(".alert-area").html(html);
   },
 
@@ -89,7 +90,7 @@ let popup = {
                 <strong>` +
       message.title +
       `!</strong> <br> ` +
-      message.content
+      message.content;
     $(".alert-area").html(html);
   },
 
@@ -253,6 +254,13 @@ let popup = {
     };
     popup.showMessage(message);
     popup.copyToClipboard(content);
+  },
+
+  handleScreenShot: function () {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      let tab = tabs[0];
+      chrome.runtime.sendMessage({ cmd: "shutdown", tab: tab });
+    });
   },
 };
 
