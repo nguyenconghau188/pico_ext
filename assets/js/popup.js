@@ -52,11 +52,11 @@ let popup = {
     console.log(type);
     if (inputTxt !== "") {
       let content;
-      if (type == "message") {
-        content = inputTxt;
-      } else {
-        content = "[" + popup.getLocalTime() + "] " + inputTxt;
-      }
+      // if (type == "message") {
+      //   content = inputTxt;
+      // } else {
+      content = "[" + popup.getLocalTime() + "] " + inputTxt;
+      // }
       let message = {
         title: "Copy text successful",
         content: content,
