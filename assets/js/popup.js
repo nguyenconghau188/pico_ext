@@ -22,41 +22,102 @@ let popup = {
       .on("click", "#btn-get-reddit-username-1", popup.handleGetRedditUsername1)
       .on("click", "#btn-get-reddit-title", popup.handleGetRedditTitle)
       .on("click", "#btn-gen-code", popup.handleGenerateCode)
-      .on("click", "#btn-screenshot", popup.handleScreenShot);
+      .on("click", "#btn-screenshot", popup.handleScreenShot)
+      .on("click", "#btn-add", popup.handleAddNewItem)
+      .on("click", ".btn-delete", popup.handleDeleteItem)
+      .on("change", "#with-code", popup.handleChangeWithCode);
   },
 
   loadLocalData: function () {
     let data = window.localStorage.getItem("data_reddit");
+    let withCode = window.localStorage.getItem("data_with_code");
+    if (withCode != null && withCode == 1) {
+      $("#with-code").prop("checked", true);
+    }
     if (data != null) {
       popup.localData = JSON.parse(data);
-      popup.loadLocalDataToInput();
+      popup.loadDataToInput(popup.localData);
     } else {
       let error = {
-        title: "Please enter Reddit info AND click Update button",
+        title: "Please enter data AND click Update button",
         content: "",
       };
+      let defaultData = popup.generateDefaultData();
+      popup.loadDataToInput(defaultData);
       popup.showError(error);
     }
   },
 
-  loadLocalDataToInput: function () {
-    $.each(popup.localData, function (key, value) {
-      let elmId = $("#input-" + key);
-      elmId.val(value);
+  generateDefaultData: function () {
+    let defaultData = [
+      {
+        id: Date.now().toString() + 0,
+        key: "url",
+        value: "",
+      },
+      {
+        id: Date.now().toString() + 1,
+        key: "username",
+        value: "",
+      },
+      {
+        id: Date.now().toString() + 2,
+        key: "shadow ban",
+        value: "",
+      },
+    ];
+    return defaultData;
+  },
+
+  generateInputElement: function (obj) {
+    let html = `<div class="mb-1 input-group">
+                    <button type="button" class="btn btn-sm btn-outline-primary btn-copy">${obj.key}</button>
+                    <input type="hidden" name="${obj.id}-id" value="${obj.id}">
+                    <input type="hidden" name="${obj.id}-key" value="${obj.key}">
+                    <input type="text" class="form-control-sm ml-1 text-input" name="${obj.id}-value" placeholder="Enter your content" value="${obj.value}">
+                    <button type="button" class="btn btn-sm btn-danger ml-1 btn-delete">X</button>
+                </div>`;
+    return html;
+  },
+
+  generateAddInputItem: function () {
+    let id = Date.now().toString();
+    let html = `<div class="mb-1 input-group">
+                    <input type="hidden" name="${id}-id" value="${id}">
+                    <input type="text" class="form-control-sm text-input-sm" name="${id}-key" placeholder="Title" value="">
+                    <input type="text" class="form-control-sm ml-1 text-input" name="${id}-value" placeholder="Content" value="">
+                    <button type="button" class="btn btn-sm btn-danger ml-1 btn-delete">X</button>
+                </div>`;
+    return html;
+  },
+
+  handleAddNewItem: function () {
+    $("#frm-reddit-info").append(popup.generateAddInputItem());
+  },
+
+  handleDeleteItem: function (e) {
+    e.preventDefault();
+    $(this).parent().remove();
+  },
+
+  handleChangeWithCode: function () {
+    let withCode = $("#with-code").is(":checked") ? 1 : 0;
+    console.log(withCode);
+    window.localStorage.setItem("data_with_code", withCode);
+  },
+
+  loadDataToInput: function (data) {
+    let htmlInner = "";
+    data.map(function (object) {
+      htmlInner += popup.generateInputElement(object);
     });
+    $("#frm-reddit-info").html(htmlInner);
   },
 
   handleButtonCopy: function () {
-    let inputTxt = $(this).next().val();
-    let type = $(this).next().attr("name");
-    console.log(type);
+    let inputTxt = $(this).next().next().next().val();
     if (inputTxt !== "") {
-      let content;
-      if (type == "message") {
-        content = inputTxt;
-      } else {
-        content = "[" + popup.getLocalTime() + "] " + inputTxt;
-      }
+      let content = "[" + popup.getLocalTime() + "] " + inputTxt;
       let message = {
         title: "Copy text successful",
         content: content,
@@ -108,21 +169,39 @@ let popup = {
       title: "Update info successful",
       content: "",
     };
+    popup.loadDataToInput(data);
     popup.showMessage(message);
   },
 
   getFormData: function (form) {
     var unindexed_array = form.serializeArray();
-    var indexed_array = {};
-
-    $.map(unindexed_array, function (n, i) {
-      indexed_array[n["name"]] = n["value"];
-    });
-
+    let indexed_array = [];
+    let indexed_obj = unindexed_array.reduce(function (data, obj) {
+      let id = obj.name.split("-")[0];
+      let key = obj.name.split("-")[1];
+      let value = obj.value;
+      if (data[id] !== undefined) {
+        let object = data[id];
+        object[key] = value;
+        data[id] = object;
+      } else {
+        data[id] = {
+          key: value,
+        };
+      }
+      return data;
+    }, {});
+    for (const [key, item] of Object.entries(indexed_obj)) {
+      indexed_array.push({
+        id: key,
+        key: item.key,
+        value: item.value,
+      });
+    }
     return indexed_array;
   },
 
-  getLocalTime: function (e) {
+  getLocalTime: function () {
     return Date.now().toString().slice(-9, -1);
   },
 

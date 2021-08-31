@@ -1,8 +1,8 @@
 body {
   font-size: 12px;
-  min-width: 380px;
+  min-width: 420x;
   min-height: 300px;
-  width: 360px;
+  width: 420px;
   height: auto;
 }
 .card {
@@ -11,14 +11,20 @@ body {
 input.text-input {
   width: 280px;
 }
+input.text-input-sm {
+  width: 90px;
+}
 .btn-copy {
-  width: 85px;
+  width: 90px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 label.col-3 {
   padding: 0 10px;
 }
 .alert {
-  padding: .8rem 1.25rem;
+  padding: 0.8rem 1.25rem;
 }
 .form-check {
   position: relative;
@@ -28,4 +34,14 @@ label.col-3 {
 }
 .text-button {
   margin-top: 8px;
+}
+.width-48 {
+  width: 48%;
+}
+#frm-reddit-info {
+  max-height: 300px;
+  overflow-y: auto;
+}
+::-webkit-scrollbar {
+  width: 3px;
 }

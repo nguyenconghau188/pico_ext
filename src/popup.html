@@ -4,6 +4,7 @@
     <title>Pico jobs for Vozers</title>
 </head>
 <link rel="stylesheet" href="../assets/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="../assets/dist/css/font-awesome.min.css">
 <link rel="stylesheet" href="../assets/css/popup.css">
 <script src="../assets/dist/js/jquery-3.6.0.min.js"></script>
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
@@ -11,32 +12,19 @@
 
 <body>
     <div class="card">
-        <div class="card-header">
-            <h5 class="card-heading">Pico jobs for Vozers</h4>
+        <div class="card-header d-flex align-items-center">
+            <img src="../assets/images/avatar.png" width="60px" >
+            <h5 class="card-heading font-weight-bold ml-5">Pico jobs for Vozers</h4>
         </div>
         <div class="card-body p-1">
             <div class="alert-area" style="display: block;">
             </div>
             <form id="frm-reddit-info">
-                <div class="mb-1 input-group">
-                    <button type="button" class="btn btn-sm btn-outline-primary btn-copy" id="btn-url">URL</button>
-                    <input type="text" class="form-control-sm ml-1 text-input" id="input-url" name="url" placeholder="Enter your reddit url"
-                        value="">
-                </div>
-                <div class="mb-1 input-group">
-                    <button type="button" class="btn btn-sm btn-outline-primary btn-copy" id="btn-username">Username</button>
-                    <input type="text" class="form-control-sm ml-1 text-input" id="input-username" name="username" placeholder="Enter your reddit username"
-                        value="">
-                </div>
-                <div class="mb-1 input-group">
-                    <button type="button" class="btn btn-sm btn-outline-primary btn-copy" id="btn-message">Message</button>
-                    <input type="text" class="form-control-sm ml-1 text-input" id="input-message" name="message" placeholder="Enter shadow ban message"
-                        value="">
-                </div>
-                <div class="mb-1 mt-1 form-group">
-                    <button type="button" class="btn btn-sm btn-warning btn-update w-100" id="btn-update">Update Reddit Info</button>
-                </div>
             </form>
+            <div class="mb-1 mt-1 form-group">            
+                <button type="button" class="btn btn-sm btn-warning width-48" id="btn-update">Update Data</button>
+                <button type="button" class="btn btn-sm btn-primary width-48 ml-1" id="btn-add">Add New</button>
+            </div>
             <div class="mb-1 input-group align-items-center">
                 <label class="col-3 text-button">Generator: </label>
                 <button type="button" class="btn btn-sm btn-outline-primary" id="btn-gen-code">Code</button>
