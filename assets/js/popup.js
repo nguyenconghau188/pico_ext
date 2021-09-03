@@ -31,7 +31,6 @@ let popup = {
   loadLocalData: function () {
     let data = window.localStorage.getItem("data_reddit");
     let withCode = window.localStorage.getItem("data_with_code");
-    window.localStorage.setItem("data_with_code", 1);
     if (withCode != null && withCode == 1) {
       $("#with-code").prop("checked", true);
     }
