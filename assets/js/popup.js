@@ -117,7 +117,7 @@ let popup = {
   handleButtonCopy: function () {
     let inputTxt = $(this).next().next().next().val();
     if (inputTxt !== "") {
-      let content = "[" + popup.getLocalTime() + "] " + inputTxt;
+      let content = inputTxt;
       let message = {
         title: "Copy text successful",
         content: content,
