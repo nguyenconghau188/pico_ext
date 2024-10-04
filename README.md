@@ -1,4 +1,4 @@
-# PICO JOBS FOR VOZER by nguyenconghau188
+# PICO JOBS FOR VOZER
 Pico jobs for vozer is an extension tool that improves speed of Reddit task for Vozer who are using it.
 
 ## Instruction
